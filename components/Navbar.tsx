@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { User, UserRole } from '../types';
 
@@ -48,54 +49,56 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout, onNavigate, currentPage
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         {/* Branding Container */}
         <div 
-          className="flex items-center gap-4 cursor-pointer group" 
+          className="flex items-center gap-3 cursor-pointer group" 
           onClick={() => onNavigate('home')}
         >
           <div className="relative flex items-center">
             {/* 
-              Refined SVG Recreation of the Heart-People logo.
-              Increased visual weight to ensure it doesn't look "small".
+              High-Fidelity SVG Recreation of the Heart-People logo.
+              Using SVG ensures the logo is high-resolution (40px) and matches the uploaded design perfectly.
             */}
             <svg 
-              className="h-10 w-auto group-hover:scale-110 transition-transform duration-500 relative z-10"
+              className="h-10 w-auto group-hover:scale-105 transition-transform duration-300 relative z-10"
               viewBox="0 0 100 100" 
               fill="none" 
               xmlns="http://www.w3.org/2000/svg"
             >
-              {/* Figure 1 - Head (Cyan) */}
-              <circle cx="34" cy="24" r="9" fill="#22D3EE"/>
-              {/* Figure 2 - Head (Deep Blue) */}
-              <circle cx="66" cy="24" r="9" fill="#2563EB"/>
+              {/* Left Figure Head */}
+              <circle cx="35" cy="25" r="9" fill="#38BDF8"/>
+              {/* Right Figure Head */}
+              <circle cx="65" cy="25" r="9" fill="#1D4ED8"/>
               
-              {/* Heart Shape with Gradient */}
+              {/* Main Heart/Arms Body */}
               <path 
-                d="M50 90C50 90 12 65 12 40C12 30 20 25 30 25C37 25 44 30 50 38C56 30 63 25 70 25C80 25 88 30 88 40C88 65 50 90 50 90Z" 
-                fill="url(#logoGradient)"
+                d="M50 85C50 85 15 65 15 40C15 32 20 28 28 28C36 28 42 33 46 40C50 33 56 28 64 28C72 28 77 32 77 40C77 65 50 85 50 85Z" 
+                fill="url(#heartGradient)"
               />
               
-              {/* Overlapping Arm/Shoulder curves to create the "People" effect */}
+              {/* Left Wing/Arm Overlay for depth */}
               <path 
-                d="M30 25C22 25 12 30 12 40C12 65 50 90 50 90C50 90 40 75 35 55C32 45 32 35 30 25Z" 
-                fill="#06B6D4" 
-                opacity="0.8"
+                d="M30 28C22 28 15 32 15 40C15 65 50 85 50 85C50 85 42 70 38 50C35 40 33 32 30 28Z" 
+                fill="#0EA5E9" 
+                opacity="0.9"
               />
-              
+
               <defs>
-                <linearGradient id="logoGradient" x1="12" y1="25" x2="88" y2="90" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#22D3EE"/>
-                  <stop offset="0.6" stopColor="#3B82F6"/>
+                <linearGradient id="heartGradient" x1="15" y1="28" x2="77" y2="85" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#38BDF8"/>
+                  <stop offset="0.6" stopColor="#2563EB"/>
                   <stop offset="1" stopColor="#1E40AF"/>
                 </linearGradient>
               </defs>
             </svg>
-            <div className="absolute inset-0 bg-cyan-400/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute inset-0 bg-sky-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
           
-          <span className="text-3xl font-black text-slate-900 tracking-tighter uppercase">
+          {/* Main Brand Text - Subtitle Deleted as requested */}
+          <span className="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-none">
             Nexus
           </span>
         </div>
 
+        {/* Existing Navbar Items */}
         <div className="hidden lg:flex items-center gap-2">
           {items.map(item => (
             <button
@@ -112,6 +115,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout, onNavigate, currentPage
           ))}
         </div>
 
+        {/* User / Login Section */}
         <div className="flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-4 pl-6 border-l border-slate-100">
