@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { User, UserRole, Campaign, Donation, Event } from './types';
 import { SAMPLE_CAMPAIGNS, SAMPLE_EVENTS, MOCK_USERS } from './constants';
-import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+import TopBar from './components/TopBar';
 import AdminDashboard from './components/AdminDashboard';
 import CampaignManagement from './components/CampaignManagement';
 import AdminVolunteerManagement from './components/AdminVolunteerManagement';
@@ -13,6 +15,8 @@ import Login from './components/Login';
 import ImpactTransparency from './components/ImpactTransparency';
 import ChatBot from './components/ChatBot';
 import Home from './components/Home';
+import WireframeDashboard from './components/WireframeDashboard';
+import Navbar from './components/Navbar';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -61,10 +65,8 @@ const App: React.FC = () => {
 
     const savedDonations = localStorage.getItem('ngo_donations');
     if (savedDonations) setDonations(JSON.parse(savedDonations));
-
     const savedCampaigns = localStorage.getItem('ngo_campaigns');
     if (savedCampaigns) setCampaigns(JSON.parse(savedCampaigns));
-
     const savedEvents = localStorage.getItem('ngo_events');
     if (savedEvents) setEvents(JSON.parse(savedEvents));
   }, []);
@@ -80,18 +82,17 @@ const App: React.FC = () => {
     setUser(u);
     localStorage.setItem('ngo_user', JSON.stringify(u));
     setCurrentPage('dashboard');
-    setNotification({ message: `Login Successful: ${u.role} Node Connected`, type: 'success' });
+    setNotification({ message: `Access Authorized: ${u.role} Node Active`, type: 'success' });
   };
 
   const handleRegister = (u: User) => {
     const updatedUsers = [...users, u];
     setUsers(updatedUsers);
     localStorage.setItem('ngo_registered_users', JSON.stringify(updatedUsers));
-    
     setUser(u);
     localStorage.setItem('ngo_user', JSON.stringify(u));
     setCurrentPage('dashboard');
-    setNotification({ message: `Registration Complete. Welcome, ${u.name}.`, type: 'success' });
+    setNotification({ message: `Welcome to the Network, ${u.name}.`, type: 'success' });
   };
 
   const handleUpdateProfile = (updatedUser: User) => {
@@ -100,7 +101,6 @@ const App: React.FC = () => {
     const updatedUsers = users.map(u => u.id === updatedUser.id ? updatedUser : u);
     setUsers(updatedUsers);
     localStorage.setItem('ngo_registered_users', JSON.stringify(updatedUsers));
-    setNotification({ message: "System synchronized.", type: 'success' });
   };
 
   const handleLogout = () => {
@@ -114,80 +114,50 @@ const App: React.FC = () => {
     if (!user) return;
     const campaign = campaigns.find(c => c.id === campaignId);
     if (!campaign) return;
-
-    const newDonation: Donation = {
-      id: `d-${Date.now()}`,
-      donorId: user.id,
-      campaignId,
-      campaignTitle: campaign.title,
-      amount,
-      date: new Date().toISOString()
-    };
-
+    const newDonation: Donation = { id: `d-${Date.now()}`, donorId: user.id, campaignId, campaignTitle: campaign.title, amount, date: new Date().toISOString() };
     const updatedDonations = [newDonation, ...donations];
     setDonations(updatedDonations);
     localStorage.setItem('ngo_donations', JSON.stringify(updatedDonations));
-
-    const updatedCampaigns = campaigns.map(c => 
-      c.id === campaignId ? { ...c, raised: (c.raised || 0) + amount } : c
-    );
+    const updatedCampaigns = campaigns.map(c => c.id === campaignId ? { ...c, raised: (c.raised || 0) + amount } : c);
     setCampaigns(updatedCampaigns);
     localStorage.setItem('ngo_campaigns', JSON.stringify(updatedCampaigns));
-
-    setNotification({ message: `Success! $${amount} impact confirmed.`, type: 'success' });
+    setNotification({ message: `Impact Locked: $${amount} Authorized.`, type: 'success' });
   };
 
   const handleAddCampaign = (newCampaign: Campaign) => {
     const updated = [...campaigns, newCampaign];
     setCampaigns(updated);
     localStorage.setItem('ngo_campaigns', JSON.stringify(updated));
-    setNotification({ message: "Campaign Authorized.", type: 'success' });
-  };
-
-  const handleCloseCampaign = (id: string) => {
-    setNotification({ message: "Mission Archive Process Initiated (Demo Only).", type: 'success' });
   };
 
   const handleAddEvent = (newEvent: Event) => {
     const updated = [...events, newEvent];
     setEvents(updated);
     localStorage.setItem('ngo_events', JSON.stringify(updated));
-    setNotification({ message: "Event Operations Confirmed.", type: 'success' });
   };
 
   const renderContent = () => {
-    if (currentPage === 'home' && !user) {
-      return <Home onStart={() => setCurrentPage('login')} onViewImpact={() => setCurrentPage('transparency')} />;
-    }
+    if (currentPage === 'wireframe') return <WireframeDashboard />;
+    if (currentPage === 'home' && !user) return <Home onStart={() => setCurrentPage('login')} onViewImpact={() => setCurrentPage('transparency')} />;
 
     switch (currentPage) {
       case 'login': 
         return <Login onLogin={handleLogin} onRegister={handleRegister} users={users} onGoBack={() => setCurrentPage('home')} />;
       case 'dashboard': 
-        if (user?.role === UserRole.ADMIN) {
-          return <AdminDashboard user={user} donations={donations} campaigns={campaigns} events={events} users={users} onAddCampaign={handleAddCampaign} onAddEvent={handleAddEvent} />;
-        }
-        if (user?.role === UserRole.DONOR) {
-          return <DonorDashboard user={user} donations={donations} campaigns={campaigns} onDonate={handleDonate} />;
-        }
-        if (user?.role === UserRole.VOLUNTEER) {
-          return <VolunteerDashboard user={user} events={events} onUpdateProfile={handleUpdateProfile} />;
-        }
+        if (user?.role === UserRole.ADMIN) return <AdminDashboard user={user} donations={donations} campaigns={campaigns} events={events} users={users} onAddCampaign={handleAddCampaign} onAddEvent={handleAddEvent} />;
+        if (user?.role === UserRole.DONOR) return <DonorDashboard user={user} donations={donations} campaigns={campaigns} onDonate={handleDonate} />;
+        if (user?.role === UserRole.VOLUNTEER) return <VolunteerDashboard user={user} events={events} onUpdateProfile={handleUpdateProfile} />;
         return <Home onStart={() => setCurrentPage('login')} onViewImpact={() => setCurrentPage('transparency')} />;
       case 'campaigns': 
-        if (user?.role === UserRole.ADMIN) {
-           return <CampaignManagement campaigns={campaigns} events={events} users={users} onCloseCampaign={handleCloseCampaign} />;
-        }
+        if (user?.role === UserRole.ADMIN) return <CampaignManagement campaigns={campaigns} events={events} users={users} onCloseCampaign={() => {}} />;
         return <Campaigns campaigns={campaigns} onDonate={handleDonate} user={user} />;
       case 'volunteers': 
-        if (user?.role === UserRole.ADMIN) {
-          return <AdminVolunteerManagement users={users} events={events} />;
-        }
-        return <Volunteers events={events} user={user} onJoin={(eventId) => {
-          const updated = events.map(e => e.id === eventId ? { ...e, volunteers: [...(e.volunteers || []), user?.id || ''] } : e);
+        if (user?.role === UserRole.ADMIN) return <AdminVolunteerManagement users={users} events={events} />;
+        return <Volunteers events={events} user={user} onJoin={(id) => {
+          const updated = events.map(e => e.id === id ? { ...e, volunteers: [...(e.volunteers || []), user?.id || ''] } : e);
           setEvents(updated);
           localStorage.setItem('ngo_events', JSON.stringify(updated));
-          setNotification({ message: "Assignment confirmed.", type: 'success' });
+          setNotification({ message: "Mission Assignment Verified.", type: 'success' });
         }} />;
       case 'transparency': 
         return <ImpactTransparency donations={donations} campaigns={campaigns} user={user} />;
@@ -196,37 +166,48 @@ const App: React.FC = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col selection:bg-indigo-100 selection:text-indigo-700">
-      <Navbar 
-        user={user} 
-        onLogout={handleLogout} 
-        onNavigate={setCurrentPage} 
-        currentPage={currentPage}
-      />
-      
-      {notification && (
-        <div className="fixed top-20 right-4 z-[100] animate-in slide-in-from-right-10 fade-in duration-300">
-          <div className={`px-6 py-3 rounded-xl shadow-2xl border flex items-center gap-3 ${
-            notification.type === 'success' ? 'bg-white border-emerald-100 text-emerald-800' : 'bg-white border-red-100 text-red-800'
-          }`}>
-            <p className="font-black text-[10px] uppercase tracking-widest">{notification.message}</p>
-          </div>
-        </div>
-      )}
+  // If user is logged in and not on wireframe/login/home, show sidebar layout
+  const isAuthLayout = user && currentPage !== 'home' && currentPage !== 'login' && currentPage !== 'wireframe';
 
-      <main className="flex-grow">
-        {renderContent()}
-      </main>
-      
-      {user && <ChatBot />}
-      
-      <footer className="bg-slate-950 text-slate-500 py-16">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-4">NGO Nexus Operations</p>
-          <p className="text-[10px] opacity-30 font-bold tracking-widest">© 2024 Command Node v3.1</p>
-        </div>
-      </footer>
+  return (
+    <div className="min-h-screen bg-slate-50 flex selection:bg-indigo-100 selection:text-indigo-700">
+      {/* Sidebar - Desktop Only */}
+      {isAuthLayout && <Sidebar user={user!} onNavigate={setCurrentPage} currentPage={currentPage} />}
+
+      <div className={`flex-grow flex flex-col ${isAuthLayout ? 'ml-72' : ''}`}>
+        {/* Navbar for Public pages, TopBar for Dashboard pages */}
+        {!isAuthLayout && currentPage !== 'wireframe' && (
+          <Navbar user={user} onLogout={handleLogout} onNavigate={setCurrentPage} currentPage={currentPage} />
+        )}
+        {isAuthLayout && <TopBar user={user!} onLogout={handleLogout} onNavigate={setCurrentPage} />}
+
+        {notification && (
+          <div className="fixed top-24 right-8 z-[100] animate-in slide-in-from-right-10 fade-in duration-300">
+            <div className={`px-6 py-4 rounded-2xl shadow-2xl border flex items-center gap-3 bg-white ${
+              notification.type === 'success' ? 'border-emerald-100 text-emerald-800' : 'border-red-100 text-red-800'
+            }`}>
+              <div className={`w-2 h-2 rounded-full ${notification.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+              <p className="font-black text-[10px] uppercase tracking-widest">{notification.message}</p>
+            </div>
+          </div>
+        )}
+
+        <main className="flex-grow">
+          {renderContent()}
+        </main>
+        
+        {user && currentPage !== 'wireframe' && <ChatBot />}
+        
+        {/* Footer only on non-dashboard pages */}
+        {!isAuthLayout && currentPage !== 'wireframe' && (
+          <footer className="bg-slate-950 text-slate-500 py-16">
+            <div className="container mx-auto px-4 text-center">
+              <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-4">NGO Nexus Operations</p>
+              <p className="text-[10px] opacity-30 font-bold tracking-widest">© 2024 Command Node v3.2</p>
+            </div>
+          </footer>
+        )}
+      </div>
     </div>
   );
 };

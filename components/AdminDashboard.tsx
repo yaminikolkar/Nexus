@@ -15,10 +15,12 @@ const AdminStatCard = ({ title, value, subtext, color }: { title: string; value:
   };
 
   return (
-    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl transition-all">
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">{title}</p>
-      <h2 className="text-3xl font-black text-slate-900 tracking-tighter mb-4">{value}</h2>
-      <div className={`inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${colorMap[color]}`}>
+    <div className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-2xl transition-all group">
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">{title}</p>
+      <div className="flex items-baseline gap-2 mb-8">
+        <h2 className="text-4xl font-black text-slate-900 tracking-tighter group-hover:text-indigo-600 transition-colors">{value}</h2>
+      </div>
+      <div className={`inline-flex items-center px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border ${colorMap[color]}`}>
         {subtext}
       </div>
     </div>
@@ -27,12 +29,12 @@ const AdminStatCard = ({ title, value, subtext, color }: { title: string; value:
 
 const AdminModal: React.FC<PropsWithChildren<{ title: string; onClose: () => void }>> = ({ title, onClose, children }) => (
   <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-[100] flex items-center justify-center p-6 overflow-y-auto">
-    <div className="bg-white rounded-[2.5rem] w-full max-w-2xl my-auto overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
-      <div className="p-10">
-        <div className="flex justify-between items-center mb-8">
-          <h3 className="text-2xl font-black text-slate-900">{title}</h3>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 transition-all">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+    <div className="bg-white rounded-[3.5rem] w-full max-w-2xl my-auto overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+      <div className="p-10 sm:p-14">
+        <div className="flex justify-between items-center mb-10">
+          <h3 className="text-3xl font-black text-slate-900 tracking-tight">{title}</h3>
+          <button onClick={onClose} className="p-3 hover:bg-slate-100 rounded-full text-slate-400 transition-all">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
         {children}
@@ -64,77 +66,72 @@ const AdminDashboard: React.FC<{
   const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
   return (
-    <div className="p-6 space-y-8 animate-in fade-in duration-700 max-w-7xl mx-auto">
-      {/* Admin Header */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-950 p-10 rounded-[3rem] text-white shadow-2xl border border-white/5">
+    <div className="p-10 space-y-10 animate-in fade-in duration-700">
+      <div className="flex items-end justify-between">
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-black tracking-tight">NGO Command Center</h1>
-            <span className="px-3 py-1 bg-white text-slate-950 text-[10px] font-black uppercase rounded-lg">Director Access</span>
-          </div>
-          <p className="text-slate-400 font-medium italic">Welcome back, {user.name}. System operational.</p>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase">Director Command</h1>
+          <p className="text-slate-500 font-medium italic mt-2">Operational Telemetry for <span className="text-indigo-600 font-bold">{user.name}</span></p>
         </div>
-        
-        <div className="flex flex-wrap gap-4">
+        <div className="flex gap-4">
           <button 
             onClick={() => setShowCampaignModal(true)}
-            className="px-6 py-4 bg-indigo-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-500 transition-all flex items-center gap-2 shadow-lg shadow-indigo-600/20"
+            className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 active:scale-95 transition-all"
           >
-            Create Campaign
+            Launch Mission
           </button>
           <button 
             onClick={() => setShowEventModal(true)}
-            className="px-6 py-4 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-100 transition-all flex items-center gap-2"
+            className="px-8 py-4 bg-slate-950 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-slate-800 shadow-xl shadow-slate-900/20 active:scale-95 transition-all"
           >
-            Deploy Event
+            Deploy Ops
           </button>
         </div>
-      </header>
+      </div>
 
-      {/* High Level Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <AdminStatCard title="Total Donations" value={`$${stats.totalDonated.toLocaleString()}`} subtext={`${stats.donorCount} Active Donors`} color="indigo" />
-        <AdminStatCard title="Active Campaigns" value={stats.activeCampaigns.toString()} subtext="Managed Across Hubs" color="emerald" />
-        <AdminStatCard title="Total Personnel" value={stats.volunteerCount.toString()} subtext="Verified Volunteers" color="amber" />
-        <AdminStatCard title="Operation Ops" value={stats.upcomingEvents.toString()} subtext="Logistics Confirmed" color="rose" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <AdminStatCard title="Treasury Sum" value={`$${stats.totalDonated.toLocaleString()}`} subtext={`${stats.donorCount} Active Contributors`} color="indigo" />
+        <AdminStatCard title="Open Missions" value={stats.activeCampaigns.toString()} subtext="Verified Hubs" color="emerald" />
+        <AdminStatCard title="Personnel" value={stats.volunteerCount.toString()} subtext="Social Impact Agents" color="amber" />
+        <AdminStatCard title="Upcoming Ops" value={stats.upcomingEvents.toString()} subtext="Logistics Ready" color="rose" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Recent Roster */}
-        <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm">
-          <div className="p-8 border-b border-slate-50 flex justify-between items-center">
-            <h3 className="text-xl font-black text-slate-900">Platform Personnel</h3>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{users.length} Total Users</span>
+        <div className="lg:col-span-2 bg-white rounded-[3rem] border border-slate-200 overflow-hidden shadow-sm">
+          <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter">Active Roster</h3>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Feed</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-slate-50 text-[10px] font-black uppercase text-slate-400">
+              <thead className="bg-white text-[10px] font-black uppercase text-slate-400 tracking-widest border-b border-slate-50">
                 <tr>
-                  <th className="px-8 py-4">User</th>
-                  <th className="px-8 py-4">Role</th>
-                  <th className="px-8 py-4">Status</th>
+                  <th className="px-8 py-6">Member Node</th>
+                  <th className="px-8 py-6">Protocol</th>
+                  <th className="px-8 py-6">Heartbeat</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                {users.slice(0, 5).map(u => (
+                {users.slice(0, 6).map(u => (
                   <tr key={u.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-8 py-4">
-                      <div className="flex items-center gap-3">
-                        <img src={u.avatar} className="w-8 h-8 rounded-full" alt="" />
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-4">
+                        <img src={u.avatar} className="w-10 h-10 rounded-full border-2 border-white shadow-sm" alt="" />
                         <div>
-                          <p className="font-bold text-slate-800 text-sm">{u.name}</p>
-                          <p className="text-[10px] text-slate-400">{u.email}</p>
+                          <p className="font-black text-slate-800 text-sm tracking-tight">{u.name}</p>
+                          <p className="text-[10px] text-slate-400 font-bold">{u.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-4">
-                      <span className={`text-[9px] font-black uppercase px-2 py-1 rounded-md ${u.role === UserRole.ADMIN ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                    <td className="px-8 py-6">
+                      <span className={`text-[9px] font-black uppercase px-3 py-1.5 rounded-lg ${u.role === UserRole.ADMIN ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500'}`}>
                         {u.role}
                       </span>
                     </td>
-                    <td className="px-8 py-4 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                      <span className="text-[10px] font-black text-emerald-600 uppercase">Online</span>
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                        <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Synced</span>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -143,58 +140,86 @@ const AdminDashboard: React.FC<{
           </div>
         </div>
 
-        {/* Quick Insights */}
-        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
-          <h3 className="text-xl font-black text-slate-900 mb-6">Asset Allocation</h3>
-          <div className="flex-grow min-h-[200px]">
+        <div className="bg-slate-950 p-10 rounded-[3rem] text-white shadow-2xl flex flex-col border border-white/5">
+          <h3 className="text-xl font-black uppercase tracking-tight mb-8">Resource Map</h3>
+          <div className="flex-grow min-h-[250px] relative">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={campaigns.map(c => ({ name: c.title, value: c.raised }))} innerRadius={60} outerRadius={80} dataKey="value">
+                <Pie data={campaigns.map(c => ({ name: c.title, value: c.raised }))} innerRadius={70} outerRadius={90} dataKey="value" paddingAngle={5}>
                   {campaigns.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Tooltip />
+                <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '12px', color: '#fff', fontSize: '10px', fontWeight: 'bold' }} />
               </PieChart>
             </ResponsiveContainer>
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+               <div className="text-center">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Global</p>
+                  <p className="text-xl font-black">Impact</p>
+               </div>
+            </div>
           </div>
-          <div className="space-y-3 mt-6">
-            {campaigns.slice(0, 3).map((c, i) => (
-              <div key={i} className="flex justify-between items-center text-[10px] font-bold">
-                <span className="text-slate-400 truncate w-32">{c.title}</span>
-                <span className="text-slate-900">${c.raised.toLocaleString()}</span>
+          <div className="space-y-4 mt-10">
+            {campaigns.slice(0, 4).map((c, i) => (
+              <div key={i} className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                  <span className="text-[10px] font-bold text-slate-400 truncate w-32 uppercase tracking-widest">{c.title}</span>
+                </div>
+                <span className="text-[10px] font-black text-white tracking-widest">${(c.raised/1000).toFixed(1)}K</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Modals */}
       {showCampaignModal && (
-        <AdminModal title="New Campaign Launch" onClose={() => setShowCampaignModal(false)}>
-           <div className="space-y-4">
-             <input type="text" placeholder="Mission Name" className="w-full p-4 bg-slate-50 border rounded-xl font-bold" />
-             <textarea placeholder="Strategy Description" className="w-full p-4 bg-slate-50 border rounded-xl min-h-[100px]" />
-             <div className="grid grid-cols-2 gap-4">
-               <input type="number" placeholder="Funding Target ($)" className="w-full p-4 bg-slate-50 border rounded-xl" />
-               <select className="w-full p-4 bg-slate-50 border rounded-xl">
-                 <option>Education</option>
-                 <option>Healthcare</option>
-                 <option>Environment</option>
-               </select>
+        <AdminModal title="Strategic Funding Launch" onClose={() => setShowCampaignModal(false)}>
+           <div className="space-y-6">
+             <div className="grid grid-cols-2 gap-6">
+               <div className="col-span-2">
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Mission Identifier</label>
+                 <input type="text" placeholder="e.g. Operation Clean Water" className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-indigo-600 outline-none" />
+               </div>
+               <div className="col-span-2">
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Strategy Overview</label>
+                 <textarea placeholder="Mission objectives and field plan..." className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl min-h-[120px] font-medium focus:border-indigo-600 outline-none" />
+               </div>
+               <div>
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Funding Target</label>
+                 <input type="number" placeholder="50000" className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-indigo-600 outline-none" />
+               </div>
+               <div>
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Sector</label>
+                 <select className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-black uppercase tracking-widest text-[10px] focus:border-indigo-600 outline-none">
+                   <option>Education</option>
+                   <option>Healthcare</option>
+                   <option>Environment</option>
+                 </select>
+               </div>
              </div>
-             <button className="w-full py-4 bg-indigo-600 text-white rounded-xl font-black uppercase tracking-widest shadow-xl">Deploy Campaign</button>
+             <button onClick={() => setShowCampaignModal(false)} className="w-full py-5 bg-indigo-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-indigo-600/20 active:scale-[0.98] transition-all">Authorize Deployment</button>
            </div>
         </AdminModal>
       )}
 
       {showEventModal && (
-        <AdminModal title="New Event Deployment" onClose={() => setShowEventModal(false)}>
-           <div className="space-y-4">
-             <input type="text" placeholder="Operation Title" className="w-full p-4 bg-slate-50 border rounded-xl font-bold" />
-             <div className="grid grid-cols-2 gap-4">
-               <input type="date" className="w-full p-4 bg-slate-50 border rounded-xl" />
-               <input type="text" placeholder="Location Code" className="w-full p-4 bg-slate-50 border rounded-xl" />
+        <AdminModal title="Personnel Deployment Schedule" onClose={() => setShowEventModal(false)}>
+           <div className="space-y-6">
+             <div className="grid grid-cols-2 gap-6">
+               <div className="col-span-2">
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Operation Code</label>
+                 <input type="text" placeholder="e.g. SF Food Pack Alpha" className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-indigo-600 outline-none" />
+               </div>
+               <div>
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Sync Date</label>
+                 <input type="date" className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-indigo-600 outline-none" />
+               </div>
+               <div>
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Sector Code</label>
+                 <input type="text" placeholder="Unit-A1" className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-indigo-600 outline-none" />
+               </div>
              </div>
-             <button className="w-full py-4 bg-slate-950 text-white rounded-xl font-black uppercase tracking-widest shadow-xl">Confirm Deployment</button>
+             <button onClick={() => setShowEventModal(false)} className="w-full py-5 bg-slate-950 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] shadow-2xl active:scale-[0.98] transition-all">Lock Operation</button>
            </div>
         </AdminModal>
       )}
