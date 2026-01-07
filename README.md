@@ -1,90 +1,61 @@
-🌐 NEXUS — NGO Donation & Volunteer Management Platform
+🌐 NEXUS — NGO Management Platform
 
-NEXUS is a modern, full-stack web platform designed to simplify and streamline NGO operations by connecting Admins, Donors, and Volunteers in one unified system.
+NEXUS is a full-stack web platform for managing NGO operations, connecting Admins, Donors, and Volunteers in one system.
 
-Built with Next.js, Tailwind CSS, and Supabase, NEXUS helps NGOs manage campaigns, donations, volunteers, and events with complete transparency and efficiency.
+Built with Next.js, Tailwind CSS, and Supabase.
 
 ✨ Features
-🛡️ Admin Dashboard
 
-Campaign creation & management
+Admin
 
-Donation tracking & reports
+Campaign & donation management
 
-Volunteer management & assignment
+Volunteer assignment & event tracking
 
-Event & attendance tracking
+Reports & analytics
 
-Campaign operations & analytics
+Donor
 
-💰 Donor Portal
+Campaign browsing & donations
 
-Secure login & donor profile
+Receipt generation & donation history
 
-Browse and support campaigns
+🗺️ Live map for nearby NGOs
 
-Online donation with receipt generation
-
-Donation history & impact tracking
-
-🗺️ Live map showing nearby cities & NGOs
-
-🧑‍🤝‍🧑 Volunteer Portal
+Volunteer
 
 Skill-based registration
 
-Assigned campaigns & tasks
+Assigned tasks & attendance tracking
 
-Event participation
+System
 
-Attendance tracking & activity log
-
-⚙️ Platform Capabilities
-
-Role-based access control
-
-Real-time analytics
+Role-based access
 
 Email notifications
 
-Mock payment integration
-
-Responsive modern UI (Blue theme)
+Responsive blue-themed UI
 
 🧱 Architecture
-Users → Web App (Next.js + Tailwind)
-          ↓
-     API Layer (Next.js)
-          ↓
-      Supabase Backend
-   (Auth + Database + Storage)
-          ↓
-External Services (Email, Payments, Receipts)
-
-🗃️ Database Overview
-
-Users — Admins, Donors, Volunteers
-
-Campaigns — NGO initiatives
-
-Donations — Transaction records
-
-Volunteers — Skills & availability
-
-Events — Campaign activities
-
-Attendance — Participation logs
-
-Locations — Live map support
+Users → Next.js App → Supabase (Auth + DB) → External Services
 
 🛠 Tech Stack
-Layer	Technology
-Frontend	Next.js, Tailwind CSS
-Backend	Next.js API Routes
-Database	Supabase (PostgreSQL)
-Auth	Supabase Auth
-Maps	Mapbox / Google Maps
-Payments	Mock / Stripe (future)
-🎯 Project Goal
 
-To provide NGOs with a reliable digital platform that improves transparency, efficiency, and collaboration — enabling greater social impact.
+Frontend: Next.js, Tailwind CSS
+
+Backend: Next.js API Routes
+
+Database & Auth: Supabase
+
+Maps: Google Maps / Mapbox
+
+🚀 Setup
+git clone https://github.com/your-username/nexus
+cd nexus
+npm install
+npm run dev
+
+Add your Supabase keys in .env.local.
+
+🎯 Goal
+Make NGO operations transparent, efficient, and impactful.
